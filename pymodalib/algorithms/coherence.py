@@ -47,8 +47,8 @@ def wphcoh(wt1: ndarray, wt2: ndarray) -> Tuple[ndarray, ndarray]:
     wt1 = wt1[:FN, :]
     wt2 = wt2[:FN, :]
 
-    phcoh = np.zeros((FN, 1), np.float64) * np.NaN
-    phdiff = np.zeros((FN, 1), np.float64) * np.NaN
+    phcoh = np.zeros((FN, 1), np.float64) * np.nan
+    phdiff = np.zeros((FN, 1), np.float64) * np.nan
 
     for fn in range(FN):
         phi1 = np.angle(wt1[fn, :])
@@ -108,7 +108,7 @@ def tlphcoh(
     csum = np.cumsum(zpc, axis=1)
 
     cum_pc = np.hstack((zeros, csum))
-    tpc = np.zeros((NF, L), np.complex64) * np.NaN
+    tpc = np.zeros((NF, L), np.complex64) * np.nan
 
     for fn in range(NF):
         cs = ipc[fn, :]

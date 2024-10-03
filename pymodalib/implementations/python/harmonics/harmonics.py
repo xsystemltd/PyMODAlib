@@ -66,7 +66,7 @@ def harmonicfinder_impl_python(
     detsig = signal
 
     ressur = np.empty((surr_count, m, m,))
-    ressur.fill(np.NaN)
+    ressur.fill(np.nan)
 
     scheduler = Scheduler(shared_memory=False)
 
@@ -161,7 +161,7 @@ def _calculate_harmonics(output1, m, n, surr_count: int, parallel=True) -> ndarr
     print(f"Calculating harmonics (running in parallel)...")
 
     res = np.empty((m, m,))
-    res.fill(np.NaN)
+    res.fill(np.nan)
 
     from multiprocessing import Pool, cpu_count
 
@@ -211,7 +211,7 @@ def _calculate_surrogate(
     print(f"Calculating surrogate {sigb + 1} (running in parallel)...")
 
     ressur = np.empty((m, m,))
-    ressur.fill(np.NaN)
+    ressur.fill(np.nan)
 
     # This is important. When running in parallel, the random state is identical for all processes;
     # rand() needs to be called according to the index of the process (which is given by the surrogate number, 'sigb').
@@ -268,7 +268,7 @@ def modbasicwavelet_flow_cmplx4(
     REZ = np.empty(
         (len(m), int(np.floor(t_end - t_start) / time_res + 1)), dtype=np.complex64
     )
-    REZ.fill(np.NaN)
+    REZ.fill(np.nan)
 
     flo = int(np.floor((t_end - t_start)))
     stevec = -1
@@ -378,7 +378,7 @@ def modbasicwavelet_flow_cmplx4(
             if margin / step > 0:
                 cols = int(np.floor(margin / (fs * time_res)))
                 nan = np.empty((cols,))
-                nan.fill(np.NaN)
+                nan.fill(np.nan)
                 trans = np.concatenate((nan, rez, nan,))
             else:
                 trans = rez.copy()
@@ -407,7 +407,7 @@ def modbasicwavelet_flow_cmplx4(
                 if diff < 0:
                     warnings.warn(msg, RuntimeWarning)
                     nan = np.empty((abs(diff),))
-                    nan.fill(np.NaN)
+                    nan.fill(np.nan)
                     REZ[stevec, :] = np.concatenate((trans, nan))
                 elif diff > 0:
                     warnings.warn(msg, RuntimeWarning)
@@ -462,7 +462,7 @@ def indexfinder3(data1, data2) -> Tuple[ndarray, ndarray]:
 
     total = np.sum(np.sum(binner))
     if total == 0:
-        meanindex = np.NaN
+        meanindex = np.nan
     else:
         i2 = 0
 

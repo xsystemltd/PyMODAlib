@@ -185,23 +185,23 @@ def group_coherence_impl(
 
     """
     Now we have the wavelet transform for every signal in the group.
-    
-    Next, we want to calculate the coherence between every signal A and B. 
+
+    Next, we want to calculate the coherence between every signal A and B.
     The coherences between unrelated signals (e.g. signal A1 and signal B2)
     will be used as surrogates.
-    
-    The group will have a coherence array like the following, where the cells marked 
+
+    The group will have a coherence array like the following, where the cells marked
     with "C" are the coherences between the signals for each subject in the group,
-    and the cells marked with "s" are the surrogates created by calculating the 
+    and the cells marked with "s" are the surrogates created by calculating the
     coherence between unrelated signals.
-    
+
                 |  sig_b_1  |  sig_b_2  |  sig_b_3  |  .....  |
     | --------- | --------- | --------- | --------- |  -----  |
     |  sig_a_1  |     C     |     s     |     s     |    s    |
     |  sig_a_2  |     s     |     C     |     s     |    s    |
     |  sig_a_3  |     s     |     s     |     C     |    s    |
     |   .....   |     s     |     s     |     s     |    C    |
-    
+
     If 'max_surrogates' is smaller than the number of surrogates, then signal pairs for surrogates
     will be chosen randomly. In the above array, spaces without surrogates will be filled with NaN values.
     """
@@ -245,16 +245,16 @@ def group_coherence_impl(
     del results
 
     # Set all skipped surrogates to NaN.
-    coherence[~mask, :] = np.NaN
+    coherence[~mask, :] = np.nan
 
     """
     Now we have a large array containing the coherence between all signals.
-    
-    The values on the diagonal are the useful coherences. For each element 
-    on the diagonal, the surrogates will be the row and column to which the 
-    element belongs. A percentile of these surrogates will be taken, and the 
+
+    The values on the diagonal are the useful coherences. For each element
+    on the diagonal, the surrogates will be the row and column to which the
+    element belongs. A percentile of these surrogates will be taken, and the
     result will be subtracted from the coherence (the diagonal element).
-    
+
     These diagonal elements will be returned in the result.
     """
 
@@ -264,7 +264,7 @@ def group_coherence_impl(
     real_coherences = coherence[diag]
 
     # Set the coherences to NaN, so we're left with the surrogates only.
-    coherence[diag] = np.NaN
+    coherence[diag] = np.nan
 
     residual_coherence = real_coherences
 
@@ -278,7 +278,7 @@ def group_coherence_impl(
             for j in range(N):
                 # Set every row and column which doesn't contain the desired coherence to NaN.
                 if i != coh_index and j != coh_index:
-                    surrogates[i, j, :] = np.NaN
+                    surrogates[i, j, :] = np.nan
 
         surr_percentile = np.nanpercentile(surrogates, percentile, axis=(0, 1,))
         surr_percentile[np.isnan(surr_percentile)] = 0

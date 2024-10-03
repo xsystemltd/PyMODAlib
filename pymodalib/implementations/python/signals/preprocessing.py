@@ -45,7 +45,7 @@ def preprocess_impl(sig: ndarray, fs: float, fmin: float, fmax: float) -> ndarra
 
     # Filtering.
     fx = np.fft.fft(new_sig, axis=0)
-    Nq = np.int(np.ceil((L + 1) / 2))
+    Nq = np.int32(np.ceil((L + 1) / 2))
 
     ff = np.concatenate([np.arange(0, Nq), -np.flip(np.arange(1, L - Nq + 1))]) * fs / L
     ff = ff.reshape(len(ff), 1)

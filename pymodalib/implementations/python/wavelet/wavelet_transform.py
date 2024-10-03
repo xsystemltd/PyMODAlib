@@ -24,11 +24,14 @@ import scipy.integrate
 import scipy.optimize
 import scipy.special as spec
 from numpy import ndarray
-from scipy.sparse.linalg.isolve.lsqr import eps
 
 import pymodalib
 from pymodalib.implementations.python.matlab_compat import *
 from pymodalib.utils import reorient
+
+# Used to be imported as: from scipy.sparse.linalg.isolve.lsqr import eps
+# No longer exists there, but was the following:
+eps = np.finfo(np.float64).eps
 
 fwtmax = "fwtmax"
 twfmax = "twfmax"
@@ -397,7 +400,7 @@ def wavelet_transform(
         # Allocate shared memory.
         smm = SharedMemory(create=True, size=WT.nbytes)
         sm_WT = np.ndarray(WT.shape, dtype=WT.dtype, buffer=smm.buf)
-        sm_WT.fill(np.NaN)
+        sm_WT.fill(np.nan)
 
         del WT
         args = []
@@ -446,7 +449,7 @@ def wavelet_transform(
                 RuntimeWarning,
             )
 
-        WT.fill(np.NaN)
+        WT.fill(np.nan)
         _calc_wt_rows(
             WT, WT.shape, 0, SN, ff, wp, freq, fwt, twf, fx, fs, L, NL, p, n1, n2
         )
@@ -457,10 +460,10 @@ def wavelet_transform(
 
         ovL = int(np.ceil(np.sum(coib1 + coib2) - L * len(icoib)))
         frn = np.empty((ovL,))
-        frn.fill(np.NaN)
+        frn.fill(np.nan)
 
         ttn = np.empty((ovL,))
-        ttn.fill(np.NaN)
+        ttn.fill(np.nan)
 
         qn = 0
         for fn in range(SN):
@@ -480,7 +483,7 @@ def wavelet_transform(
             np.ravel_multi_index(
                 [frn.astype(np.int), ttn.astype(np.int)], dims=WT.shape
             )
-        ] = np.NaN
+        ] = np.nan
 
     if return_opt:
         if isinstance(fmin, ndarray):
@@ -502,6 +505,7 @@ def wavelet_transform(
             "n1": n1,
             "n2": n2,
             "rel_tolerance": rel_tolerance,
+            'wp': wp,
         }
         return WT, freq, opt
 
@@ -698,12 +702,12 @@ def parcalc(racc, L, wp, fwt, twf, disp_mode, f0, fmax, wavelet="Lognorm", fs=-1
 
         if AC > 10 ** -12:
             warnings.warn(
-                """--------------------------------------------- Warning! 
-            ---------------------------------------------\n Wavelet does not seem to be admissible (its Fourier 
-            transform does not vanish at zero frequency)!\n Parameters estimated from its frequency domain form, 
-            e.g. integration constant Cpsi (which is \n infinite for non-admissible wavelets), cannot be estimated 
-            appropriately (the same concerns the \n number-of-voices ''nv'', when set to ''auto'', so frequency 
-            discretization might be also not appropriate).\n It is recommended to use only admissible wavelets.\n 
+                """--------------------------------------------- Warning!
+            ---------------------------------------------\n Wavelet does not seem to be admissible (its Fourier
+            transform does not vanish at zero frequency)!\n Parameters estimated from its frequency domain form,
+            e.g. integration constant Cpsi (which is \n infinite for non-admissible wavelets), cannot be estimated
+            appropriately (the same concerns the \n number-of-voices ''nv'', when set to ''auto'', so frequency
+            discretization might be also not appropriate).\n It is recommended to use only admissible wavelets.\n
             ----------------------------------------------------------------------------------------------------\n""",
                 WaveletWarning,
             )
@@ -1415,7 +1419,7 @@ def sqeps(vfun, xp, lim1, lim2, racc, MIC, nlims):
         tx2 = lim2 - 0.01 * (lim2 - xp)
         qv2 = np.abs(vfun(tx2) / vmax)
     else:
-        qv2 = np.NaN
+        qv2 = np.nan
 
     if qv2 < 0.5:
         x2h = scipy.optimize.brentq(
@@ -1456,7 +1460,7 @@ def sqeps(vfun, xp, lim1, lim2, racc, MIC, nlims):
             + np.abs(vfun((tx1 + 3 * lim1) / 4))
         ) / np.abs(vmax)
     else:
-        qv1 = np.NaN
+        qv1 = np.nan
 
     if qv1 < 10 ** (-8) / 3:
         x1e = scipy.optimize.brentq(
@@ -1494,7 +1498,7 @@ def sqeps(vfun, xp, lim1, lim2, racc, MIC, nlims):
             + abs(vfun((tx2 + 3 * lim2) / 4))
         ) / abs(vmax)
     else:
-        qv2 = np.NaN
+        qv2 = np.nan
 
     if qv2 < 10 ^ (-8):
         x2e = scipy.optimize.brentq(
@@ -1707,8 +1711,18 @@ def sqeps(vfun, xp, lim1, lim2, racc, MIC, nlims):
             Q2 = Q2 + qv
 
     QQ = np.asarray([[Q1, Q2], [-q1m, q2m]], dtype=np.complex64)
+    if isinstance(x1e, np.ndarray): x1e = x1e[0]
+    if isinstance(x2e, np.ndarray): x2e = x2e[0]
+    if isinstance(x1h, np.ndarray): x1h = x1h[0]
+    if isinstance(x2h, np.ndarray): x2h = x2h[0]
+    if isinstance(x1m, np.ndarray): x1m = x1m[0]
+    if isinstance(x2m, np.ndarray): x2m = x2m[0]
+    if isinstance(lim1, np.ndarray): lim1 = lim1[0]
+    if isinstance(lim2, np.ndarray): lim2 = lim2[0]
+    print([[x1e, x2e], [x1h, x2h], [x1m, x2m], [lim1, lim2]])
+
     xx = np.asarray(
-        ([x1e, x2e], [x1h, x2h], [x1m, x2m], [lim1, lim2]), dtype=np.float64
+        [[x1e, x2e], [x1h, x2h], [x1m, x2m], [lim1, lim2]], dtype=np.float64
     )
 
     Q = Q1 + Q2
@@ -2182,7 +2196,7 @@ def aminterp(X, Y, Z, XI, YI, method):
 
     Note: This function is incomplete.
     """
-    ZI = np.zeros(np.size(Z, 1), len(XI)) * np.NaN
+    ZI = np.zeros(np.size(Z, 1), len(XI)) * np.nan
     xstep = np.mean(np.diff(XI))
     xind = 1 + np.floor((1 / 2) + (X - XI(1)) / xstep)
     xpnt = np.asarray([[0], [0], [0]])
@@ -2199,7 +2213,7 @@ def aminterp(X, Y, Z, XI, YI, method):
             ZI[xind[xid1]] = np.mean(Z[xid1:xid2], 2)
     Z = ZI
 
-    ZI = np.zeros(len(YI), np.size(Z, 2)) * np.NaN
+    ZI = np.zeros(len(YI), np.size(Z, 2)) * np.nan
     ystep = np.mean(np.diff(YI))
     yind = 1 + np.floor((1 / 2) + (Y - YI(1)) / ystep)
     ypnt = [[0], [0], [0]]

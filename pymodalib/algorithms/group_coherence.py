@@ -190,7 +190,7 @@ def statistical_test(
         if xm.size > 0 and not np.isnan(xm).all() and not np.isnan(ym).all():
             w, p = ranksums(xm, ym)
         else:
-            w, p = np.NaN, np.NaN
+            w, p = np.nan, np.nan
 
         results.append((w, p,))
 

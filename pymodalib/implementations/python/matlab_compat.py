@@ -22,7 +22,7 @@ import scipy.optimize
 from pymodalib.utils.decorators import deprecated
 
 """
-Contains useful Python replicas of oft-used Matlab functions. 
+Contains useful Python replicas of oft-used Matlab functions.
 Import with wildcard to make all available.
 """
 
@@ -161,7 +161,7 @@ pi = np.pi
 eps = np.finfo(np.float64).eps
 inf = np.inf
 Inf = inf
-NAN = np.NaN
+NAN = np.nan
 
 
 @deprecated
