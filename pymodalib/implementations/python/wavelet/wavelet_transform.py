@@ -1719,7 +1719,6 @@ def sqeps(vfun, xp, lim1, lim2, racc, MIC, nlims):
     if isinstance(x2m, np.ndarray): x2m = x2m[0]
     if isinstance(lim1, np.ndarray): lim1 = lim1[0]
     if isinstance(lim2, np.ndarray): lim2 = lim2[0]
-    print([[x1e, x2e], [x1h, x2h], [x1m, x2m], [lim1, lim2]])
 
     xx = np.asarray(
         [[x1e, x2e], [x1h, x2h], [x1m, x2m], [lim1, lim2]], dtype=np.float64
